@@ -10,6 +10,11 @@ export const GlobalStyle = createGlobalStyle`
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 img, picture, video, canvas, svg {
   display: block;
