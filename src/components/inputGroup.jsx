@@ -1,10 +1,5 @@
-import styled from "styled-components";
 import { Form } from "react-bootstrap";
 import { InputGroup } from "react-bootstrap";
-
-const InputContainer = styled.div`
-  display: flex;
-`;
 
 const shops = [
     { id: 1, name: "Hepsiburada" },
@@ -28,7 +23,6 @@ const shops = [
 export default function MyInputGroup() {
     
   return (
-    <InputContainer>
       <InputGroup className="mb-3">
         <InputGroup.Text id="inputGroup-sizing-default">
           Product Name
@@ -46,6 +40,5 @@ export default function MyInputGroup() {
           {categoryOptions}
         </Form.Select>
       </InputGroup>
-    </InputContainer>
   );
 }
