@@ -1,5 +1,6 @@
 import { Form } from "react-bootstrap";
 import { InputGroup } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
 const shops = [
     { id: 1, name: "Hepsiburada" },
@@ -39,6 +40,9 @@ export default function MyInputGroup() {
           <option>Select Category</option>
           {categoryOptions}
         </Form.Select>
+        <Button variant="primary" type="submit">
+        Add
+      </Button>
       </InputGroup>
   );
 }
