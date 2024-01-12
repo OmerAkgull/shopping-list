@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Form } from "react-bootstrap";
 import { InputGroup } from "react-bootstrap";
 import { Button } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 
 const shops = [
   { id: 1, name: "Hepsiburada" },
@@ -32,7 +33,7 @@ const categoryOptions = categories.map((category) => (
 
 export default function MyInputGroup() {
   const [productInput, setProductInput] = useState("");
-  const [product, setProduct] = useState("");
+  const [product, setProduct] = useState([]);
 
   function addProduct(e) {
     e.preventDefault();
@@ -41,27 +42,40 @@ export default function MyInputGroup() {
   }
 
   return (
-    <InputGroup className="mb-3">
-      <InputGroup.Text id="inputGroup-sizing-default">
-        Product Name
-      </InputGroup.Text>
-      <Form.Control
-        onChange={(e) => setProductInput(e.target.value)}
-        value={productInput}
-        aria-label="Default"
-        aria-describedby="inputGroup-sizing-default"
-      />
-      <Form.Select>
-        <option>Select Shop</option>
-        {shopOptions}
-      </Form.Select>
-      <Form.Select>
-        <option>Select Category</option>
-        {categoryOptions}
-      </Form.Select>
-      <Button onClick={addProduct} variant="primary" type="submit">
-        Add
-      </Button>
-    </InputGroup>
+    <>
+      <InputGroup className="mb-3">
+        <InputGroup.Text id="inputGroup-sizing-default">
+          Product Name
+        </InputGroup.Text>
+        <Form.Control
+          onChange={(e) => setProductInput(e.target.value)}
+          value={productInput}
+          aria-label="Default"
+          aria-describedby="inputGroup-sizing-default"
+        />
+        <Form.Select>
+          <option>Select Shop</option>
+          {shopOptions}
+        </Form.Select>
+        <Form.Select>
+          <option>Select Category</option>
+          {categoryOptions}
+        </Form.Select>
+        <Button onClick={addProduct} variant="primary" type="submit">
+          Add
+        </Button>
+      </InputGroup>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product</th>
+            <th>Shop</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </Table>
+    </>
   );
 }
