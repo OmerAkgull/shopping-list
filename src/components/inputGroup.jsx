@@ -1,45 +1,68 @@
 import { useState } from "react";
-import { Form } from "react-bootstrap";
+import { Alert, Form } from "react-bootstrap";
 import { InputGroup } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import { Table } from "react-bootstrap";
+import { nanoid } from "nanoid";
 
 const shops = [
-  { id: 1, name: "Hepsiburada" },
-  { id: 2, name: "Trendyol" },
-  { id: 3, name: "n11" },
-  { id: 4, name: "Migros" },
-  { id: 5, name: "Carrefour" },
+  { value: 1, label: "Hepsiburada" },
+  { value: 2, label: "Trendyol" },
+  { value: 3, label: "n11" },
+  { value: 4, label: "Migros" },
+  { value: 5, label: "Carrefour" },
 ];
 
 const categories = [
-  { id: 1, name: "Electronics" },
-  { id: 2, name: "Cosmetics" },
-  { id: 3, name: "Books" },
-  { id: 4, name: "Sports Equipment" },
-  { id: 5, name: "Clothing" },
+  { value: 1, label: "Electronics" },
+  { value: 2, label: "Cosmetics" },
+  { value: 3, label: "Books" },
+  { value: 4, label: "Sports Equipment" },
+  { value: 5, label: "Clothing" },
 ];
 
 const shopOptions = shops.map((shop) => (
-  <option value={shop.id} key={shop.id}>
-    {shop.name}
+  <option value={shop.label} key={shop.value}>
+    {shop.label}
   </option>
 ));
 const categoryOptions = categories.map((category) => (
-  <option value={category.id} key={category.id}>
-    {category.name}
+  <option value={category.label} key={category.value}>
+    {category.label}
   </option>
 ));
 
 export default function MyInputGroup() {
   const [productInput, setProductInput] = useState("");
   const [product, setProduct] = useState([]);
+  const [productShop, setProductShop] = useState("");
+  const [productCategory, setProductCategory] = useState("");
 
   function addProduct(e) {
     e.preventDefault();
-    setProduct([...product, productInput]);
-    setProductInput("");
+    if (productInput === "" || productShop === "" || productCategory === "") {
+      alert("Please fill all required fields!");
+    } else {
+      setProduct([
+        ...product,
+        {
+          name: productInput,
+          shop: productShop,
+          category: productCategory,
+          id: nanoid(),
+        },
+      ]);
+      setProductInput("");
+    }
   }
+
+  const products = product.map((aProduct) => (
+    <tr key={aProduct.id}>
+      <td>{aProduct.name}</td>
+      <td>{aProduct.shop}</td>
+      <td>{aProduct.category}</td>
+    </tr>
+  ));
 
   return (
     <>
@@ -53,11 +76,11 @@ export default function MyInputGroup() {
           aria-label="Default"
           aria-describedby="inputGroup-sizing-default"
         />
-        <Form.Select>
+        <Form.Select onChange={(e) => setProductShop(e.target.value)}>
           <option>Select Shop</option>
           {shopOptions}
         </Form.Select>
-        <Form.Select>
+        <Form.Select onChange={(e) => setProductCategory(e.target.value)}>
           <option>Select Category</option>
           {categoryOptions}
         </Form.Select>
@@ -68,13 +91,14 @@ export default function MyInputGroup() {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>#</th>
             <th>Product</th>
             <th>Shop</th>
             <th>Category</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+          {products}
+        </tbody>
       </Table>
     </>
   );
