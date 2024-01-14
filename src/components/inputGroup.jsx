@@ -50,19 +50,37 @@ export default function MyInputGroup() {
           shop: productShop,
           category: productCategory,
           id: nanoid(),
+          isBought: false,
         },
       ]);
       setProductInput("");
     }
   }
 
+  function addToBought(productId) {
+    const updatedProduct = product.map((productz) =>
+      productz.id === productId ? { ...productz, isBought: true } : productz
+    );
+    setProduct(updatedProduct);
+  }
+
   const products = product.map((aProduct) => (
     <tr key={aProduct.id}>
-      <td>{aProduct.name}</td>
+      <td
+        onClick={() => addToBought(aProduct.id)}
+        className={aProduct.isBought ? "text-decoration-line-through" : ""}
+      >
+        {aProduct.name}
+      </td>
       <td>{aProduct.shop}</td>
       <td>{aProduct.category}</td>
     </tr>
   ));
+  //  console.log("filter",shops?.find(item => item.id == product[0]?.shop));
+  // console.log("filter",shops?.find(item => console.log(item)));
+  // console.log(product);
+  // let x = shops?.findIndex(e => Number(e.value) === Number(product[0]?.shop))
+  // console.log("X",x);
 
   return (
     <>
@@ -96,9 +114,7 @@ export default function MyInputGroup() {
             <th>Category</th>
           </tr>
         </thead>
-        <tbody>
-          {products}
-        </tbody>
+        <tbody>{products}</tbody>
       </Table>
     </>
   );
