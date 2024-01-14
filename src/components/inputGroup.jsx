@@ -89,17 +89,18 @@ export default function MyInputGroup() {
           Product Name
         </InputGroup.Text>
         <Form.Control
+          className="form-control-lg w-25"
           onChange={(e) => setProductInput(e.target.value)}
           value={productInput}
           aria-label="Default"
           aria-describedby="inputGroup-sizing-default"
         />
         <Form.Select onChange={(e) => setProductShop(e.target.value)}>
-          <option>Select Shop</option>
+          <option>Shop</option>
           {shopOptions}
         </Form.Select>
         <Form.Select onChange={(e) => setProductCategory(e.target.value)}>
-          <option>Select Category</option>
+          <option>Category</option>
           {categoryOptions}
         </Form.Select>
         <Button onClick={addProduct} variant="primary" type="submit">
