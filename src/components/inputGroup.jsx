@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Alert, Form } from "react-bootstrap";
 import { InputGroup } from "react-bootstrap";
 import { Button } from "react-bootstrap";
@@ -38,6 +38,7 @@ export default function MyInputGroup() {
   const [product, setProduct] = useState([]);
   const [productShop, setProductShop] = useState("");
   const [productCategory, setProductCategory] = useState("");
+  const [alertVisible, setAlertVisible] = useState(false);
 
   function addProduct(e) {
     e.preventDefault();
@@ -58,6 +59,11 @@ export default function MyInputGroup() {
     }
   }
 
+  function removeProduct(id) {
+    const productsLeft = product.filter((oneProduct) => oneProduct.id !== id);
+    setProduct(productsLeft);
+  }
+
   function addToBought(productId) {
     const updatedProduct = product.map((productz) =>
       productz.id === productId ? { ...productz, isBought: true } : productz
@@ -75,14 +81,18 @@ export default function MyInputGroup() {
       </td>
       <td>{aProduct.shop}</td>
       <td>{aProduct.category}</td>
-      <td className="text-center"><IconButton/></td>
+      <td>
+        <IconButton onClick={() => removeProduct(aProduct.id)} />
+      </td>
     </tr>
   ));
-  //  console.log("filter",shops?.find(item => item.id == product[0]?.shop));
-  // console.log("filter",shops?.find(item => console.log(item)));
-  // console.log(product);
-  // let x = shops?.findIndex(e => Number(e.value) === Number(product[0]?.shop))
-  // console.log("X",x);
+
+  useEffect(()=> {
+    const boughtProducts = product.filter((aProduct) => aProduct.isBought === true);
+    if (boughtProducts.length === product.length && product.length != 0) {
+      setAlertVisible(true);
+    }
+  }, [product]);
 
   return (
     <>
@@ -120,6 +130,18 @@ export default function MyInputGroup() {
         </thead>
         <tbody className="text-center">{products}</tbody>
       </Table>
+      <Alert show={alertVisible} variant="success">
+        <Alert.Heading>Congratulations!</Alert.Heading>
+        <p>
+         You have successfully bought all products in your list!
+        </p>
+        <hr />
+        <div className="d-flex justify-content-end">
+          <Button onClick={()=> setAlertVisible(false)} variant="outline-success">
+            Close
+          </Button>
+        </div>
+      </Alert>
     </>
   );
 }
