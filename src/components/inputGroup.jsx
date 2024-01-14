@@ -39,11 +39,13 @@ export default function MyInputGroup() {
   const [productShop, setProductShop] = useState("");
   const [productCategory, setProductCategory] = useState("");
   const [alertVisible, setAlertVisible] = useState(false);
+  const [redAlertVisible, setRedAlertVisible] = useState(false);
+  const [triggerEffect, setTriggerEffect] = useState(true);
 
   function addProduct(e) {
     e.preventDefault();
     if (productInput === "" || productShop === "" || productCategory === "") {
-      alert("Please fill all required fields!");
+      setRedAlertVisible(true);
     } else {
       setProduct([
         ...product,
@@ -62,6 +64,7 @@ export default function MyInputGroup() {
   function removeProduct(id) {
     const productsLeft = product.filter((oneProduct) => oneProduct.id !== id);
     setProduct(productsLeft);
+    setTriggerEffect(false);
   }
 
   function addToBought(productId) {
@@ -69,7 +72,10 @@ export default function MyInputGroup() {
       productz.id === productId ? { ...productz, isBought: true } : productz
     );
     setProduct(updatedProduct);
+    setTriggerEffect(true);
   }
+
+  console.log("PRODUCT", product);
 
   const products = product.map((aProduct) => (
     <tr key={aProduct.id}>
@@ -87,12 +93,16 @@ export default function MyInputGroup() {
     </tr>
   ));
 
-  useEffect(()=> {
-    const boughtProducts = product.filter((aProduct) => aProduct.isBought === true);
-    if (boughtProducts.length === product.length && product.length != 0) {
+  useEffect(() => {
+    const allProductsBought = product.every(
+      (aProduct) => aProduct.isBought === true
+    );
+    const hasProducts = product.length > 0;
+    if (allProductsBought && hasProducts) {
       setAlertVisible(true);
     }
   }, [product]);
+
 
   return (
     <>
@@ -132,12 +142,26 @@ export default function MyInputGroup() {
       </Table>
       <Alert show={alertVisible} variant="success">
         <Alert.Heading>Congratulations!</Alert.Heading>
-        <p>
-         You have successfully bought all products in your list!
-        </p>
+        <p>You have successfully bought all products in your list!</p>
         <hr />
         <div className="d-flex justify-content-end">
-          <Button onClick={()=> setAlertVisible(false)} variant="outline-success">
+          <Button
+            onClick={() => setAlertVisible(false)}
+            variant="outline-success"
+          >
+            Close
+          </Button>
+        </div>
+      </Alert>
+      <Alert show={redAlertVisible} variant="danger">
+        <Alert.Heading>Error!</Alert.Heading>
+        <p>Please fill all required fields!</p>
+        <hr />
+        <div className="d-flex justify-content-end">
+          <Button
+            onClick={() => setRedAlertVisible(false)}
+            variant="outline-danger"
+          >
             Close
           </Button>
         </div>
