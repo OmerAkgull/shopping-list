@@ -4,6 +4,7 @@ import { InputGroup } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import { Table } from "react-bootstrap";
 import { nanoid } from "nanoid";
+import IconButton from "./iconButton";
 
 const shops = [
   { value: 1, label: "Hepsiburada" },
@@ -74,6 +75,7 @@ export default function MyInputGroup() {
       </td>
       <td>{aProduct.shop}</td>
       <td>{aProduct.category}</td>
+      <td className="text-center"><IconButton/></td>
     </tr>
   ));
   //  console.log("filter",shops?.find(item => item.id == product[0]?.shop));
@@ -108,14 +110,15 @@ export default function MyInputGroup() {
         </Button>
       </InputGroup>
       <Table striped bordered hover>
-        <thead>
+        <thead className="text-center">
           <tr>
             <th>Product</th>
             <th>Shop</th>
             <th>Category</th>
+            <th>Delete</th>
           </tr>
         </thead>
-        <tbody>{products}</tbody>
+        <tbody className="text-center">{products}</tbody>
       </Table>
     </>
   );
