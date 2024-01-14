@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 import { Table } from "react-bootstrap";
 import { nanoid } from "nanoid";
 import IconButton from "./iconButton";
+import JSConfetti from "js-confetti";
 
 const shops = [
   { value: 1, label: "Hepsiburada" },
@@ -40,7 +41,8 @@ export default function MyInputGroup() {
   const [productCategory, setProductCategory] = useState("");
   const [alertVisible, setAlertVisible] = useState(false);
   const [redAlertVisible, setRedAlertVisible] = useState(false);
-  const [triggerEffect, setTriggerEffect] = useState(true);
+
+  const JSConfeti = new JSConfetti();
 
   function addProduct(e) {
     e.preventDefault();
@@ -61,21 +63,52 @@ export default function MyInputGroup() {
     }
   }
 
-  function removeProduct(id) {
-    const productsLeft = product.filter((oneProduct) => oneProduct.id !== id);
+  function removeProduct(productObj) {
+    const productsLeft = product.filter(
+      (oneProduct) => oneProduct.id !== productObj.id
+    );
     setProduct(productsLeft);
-    setTriggerEffect(false);
+    const allProductsBought = productsLeft.every(
+      (aProduct) => aProduct.isBought === true
+    );
+    let checkBought = productObj.isBought;
+    if (allProductsBought && checkBought === false) {
+      setAlertVisible(true);
+    }
   }
 
   function addToBought(productId) {
     const updatedProduct = product.map((productz) =>
       productz.id === productId ? { ...productz, isBought: true } : productz
     );
+    checkProduct(updatedProduct);
     setProduct(updatedProduct);
-    setTriggerEffect(true);
   }
 
-  console.log("PRODUCT", product);
+  const checkProduct = (x) => {
+    const allProductsBought = x.every((aProduct) => aProduct.isBought === true);
+    const hasProducts = x.length > 0;
+    if (allProductsBought && hasProducts) {
+      setAlertVisible(true);
+    } else {
+      setAlertVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    const allProductsBought = product.every(
+      (aProduct) => aProduct.isBought === true
+    );
+    if (!allProductsBought) {
+      checkProduct(product);
+    }
+  }, [product.length]);
+
+  useEffect(() => {
+    if (alertVisible) {
+      JSConfeti.addConfetti();
+    }
+  }, [alertVisible]);
 
   const products = product.map((aProduct) => (
     <tr key={aProduct.id}>
@@ -88,21 +121,10 @@ export default function MyInputGroup() {
       <td>{aProduct.shop}</td>
       <td>{aProduct.category}</td>
       <td>
-        <IconButton onClick={() => removeProduct(aProduct.id)} />
+        <IconButton onClick={() => removeProduct(aProduct)} />
       </td>
     </tr>
   ));
-
-  useEffect(() => {
-    const allProductsBought = product.every(
-      (aProduct) => aProduct.isBought === true
-    );
-    const hasProducts = product.length > 0;
-    if (allProductsBought && hasProducts) {
-      setAlertVisible(true);
-    }
-  }, [product]);
-
 
   return (
     <>
