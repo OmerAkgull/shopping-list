@@ -172,7 +172,7 @@ export default function MyInputGroup() {
         </Button>
       </InputGroup>
       <InputGroup className="mb-3 align-items-center">
-        <h4 className="me-2 mt-1">Filter</h4>
+        <h4 className="me-2 mt-1 text-light">Filter</h4>
         <Form.Select
           value={filteredShopId}
           onChange={(e) => setFilteredShopId(e.target.value)}
@@ -196,7 +196,7 @@ export default function MyInputGroup() {
           <option value="Clothing">Clothing</option>
         </Form.Select>
         <Form.Group
-          className="ms-3"
+          className="ms-3 me-3 bg-white px-2 py-2 rounded"
           controlId="formRadio"
           value={filteredStatus}
           onChange={(e) => setFilteredStatus(e.target.value)}
