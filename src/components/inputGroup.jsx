@@ -19,7 +19,7 @@ const categories = [
   { value: 1, label: "Electronics" },
   { value: 2, label: "Cosmetics" },
   { value: 3, label: "Books" },
-  { value: 4, label: "Sports Equipment" },
+  { value: 4, label: "Sports" },
   { value: 5, label: "Clothing" },
 ];
 
@@ -102,7 +102,7 @@ export default function MyInputGroup() {
     if (!allProductsBought) {
       checkProduct(product);
     }
-  }, [product.length]);
+  }, [product.length, product]);
 
   useEffect(() => {
     if (alertVisible) {
@@ -150,6 +150,43 @@ export default function MyInputGroup() {
         <Button onClick={addProduct} variant="primary" type="submit">
           Add
         </Button>
+      </InputGroup>
+      <InputGroup className="mb-3 align-items-center">
+      <Form.Select>
+          <option>Shop</option>
+          {shopOptions}
+        </Form.Select>
+        <Form.Select>
+          <option>Category</option>
+          {categoryOptions}
+        </Form.Select>
+        <Form.Group className="ms-3" controlId="formRadio">
+        <Form.Check
+        inline
+          type="radio"
+          label="All"
+          name="formRadio"
+          id="inline"
+        />
+        <Form.Check
+        inline
+          type="radio"
+          label="Bought"
+          name="formRadio"
+          id="inline"
+        />
+        <Form.Check
+        inline
+          type="radio"
+          label="Not bought"
+          name="formRadio"
+          id="inline"
+        />
+      </Form.Group>
+      <InputGroup.Text id="basic-addon1">Product</InputGroup.Text>
+        <Form.Control
+          aria-label="Product"
+        />
       </InputGroup>
       <Table striped bordered hover>
         <thead className="text-center">
