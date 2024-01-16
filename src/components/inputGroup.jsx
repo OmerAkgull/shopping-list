@@ -6,6 +6,7 @@ import { Table } from "react-bootstrap";
 import { nanoid } from "nanoid";
 import IconButton from "./iconButton";
 import JSConfetti from "js-confetti";
+import FuzzySearch from "fuzzy-search";
 
 const shops = [
   { value: 1, label: "Hepsiburada" },
@@ -48,6 +49,7 @@ export default function MyInputGroup() {
   const [filteredName, setFilteredName] = useState("");
 
   const JSConfeti = new JSConfetti();
+
 
   function addProduct(e) {
     e.preventDefault();
