@@ -41,6 +41,11 @@ export default function MyInputGroup() {
   const [productCategory, setProductCategory] = useState("");
   const [alertVisible, setAlertVisible] = useState(false);
   const [redAlertVisible, setRedAlertVisible] = useState(false);
+  // for Filtering
+  const [filteredShopId, setFilteredShopId] = useState("Shop");
+  const [filteredCategoryId, setFilteredCategoryId] = useState("Category");
+  const [filteredStatus, setFilteredStatus] = useState("all");
+  const [filteredName, setFilteredName] = useState("");
 
   const JSConfeti = new JSConfetti();
 
@@ -110,7 +115,20 @@ export default function MyInputGroup() {
     }
   }, [alertVisible]);
 
-  const products = product.map((aProduct) => (
+  const filteredProducts = product.filter((product) => {
+    const shopMatch =
+      filteredShopId === "Shop" || product.shop.includes(filteredShopId);
+    const categoryMatch =
+      filteredCategoryId === "Category" ||
+      product.category.includes(filteredCategoryId);
+    const statusMatch =
+      filteredStatus === "all" ||
+      (filteredStatus === "bought" && product.isBought) ||
+      (filteredStatus === "notBought" && !product.isBought);
+    return shopMatch && categoryMatch && statusMatch;
+  });
+
+  const products = filteredProducts.map((aProduct) => (
     <tr key={aProduct.id}>
       <td
         onClick={() => addToBought(aProduct.id)}
@@ -152,41 +170,62 @@ export default function MyInputGroup() {
         </Button>
       </InputGroup>
       <InputGroup className="mb-3 align-items-center">
-      <Form.Select>
+        <h4 className="me-2 mt-1">Filter</h4>
+        <Form.Select
+          value={filteredShopId}
+          onChange={(e) => setFilteredShopId(e.target.value)}
+        >
           <option>Shop</option>
-          {shopOptions}
+          <option value="Hepsiburada">Hepsiburada</option>
+          <option value="Trendyol">Trendyol</option>
+          <option value="n11">n11</option>
+          <option value="Migros">Migros</option>
+          <option value="Carrefour">Carrefour</option>
         </Form.Select>
-        <Form.Select>
+        <Form.Select
+          value={filteredCategoryId}
+          onChange={(e) => setFilteredCategoryId(e.target.value)}
+        >
           <option>Category</option>
-          {categoryOptions}
+          <option value="Electronics">Electronics</option>
+          <option value="Cosmetics">Cosmetics</option>
+          <option value="Books">Books</option>
+          <option value="Sports">Sports</option>
+          <option value="Clothing">Clothing</option>
         </Form.Select>
-        <Form.Group className="ms-3" controlId="formRadio">
-        <Form.Check
-        inline
-          type="radio"
-          label="All"
-          name="formRadio"
-          id="inline"
-        />
-        <Form.Check
-        inline
-          type="radio"
-          label="Bought"
-          name="formRadio"
-          id="inline"
-        />
-        <Form.Check
-        inline
-          type="radio"
-          label="Not bought"
-          name="formRadio"
-          id="inline"
-        />
-      </Form.Group>
-      <InputGroup.Text id="basic-addon1">Product</InputGroup.Text>
-        <Form.Control
-          aria-label="Product"
-        />
+        <Form.Group
+          className="ms-3"
+          controlId="formRadio"
+          value={filteredStatus}
+          onChange={(e) => setFilteredStatus(e.target.value)}
+        >
+          <Form.Check
+            inline
+            type="radio"
+            label="All"
+            value="all"
+            name="formRadio"
+            id="inline"
+          />
+          <Form.Check
+            inline
+            type="radio"
+            label="Bought"
+            value="bought"
+            name="formRadio"
+            id="inline"
+          />
+          <Form.Check
+            inline
+            type="radio"
+            label="Not bought"
+            value="notBought"
+            name="formRadio"
+            id="inline"
+          />
+        </Form.Group>
+        <InputGroup.Text id="basic-addon1">Product</InputGroup.Text>
+        <Form.Control value={filteredName} onChange={e => setFilteredName(e.target.value)} aria-label="Product" />
       </InputGroup>
       <Table striped bordered hover>
         <thead className="text-center">
