@@ -17,6 +17,7 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  font-family: 'Fira Sans', sans-serif;
 }
 img, picture, video, canvas, svg {
   display: block;
