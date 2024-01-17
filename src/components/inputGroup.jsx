@@ -47,9 +47,9 @@ export default function MyInputGroup() {
   const [filteredCategoryId, setFilteredCategoryId] = useState("Category");
   const [filteredStatus, setFilteredStatus] = useState("all");
   const [filteredName, setFilteredName] = useState("");
+  const [fuzzySearch, setFuzzySearch] = useState([]);
 
   const JSConfeti = new JSConfetti();
-
 
   function addProduct(e) {
     e.preventDefault();
@@ -117,7 +117,7 @@ export default function MyInputGroup() {
     }
   }, [alertVisible]);
 
-  const filteredProducts = product.filter((product) => {
+  let filteredProducts = product.filter((product) => {
     const shopMatch =
       filteredShopId === "Shop" || product.shop.includes(filteredShopId);
     const categoryMatch =
@@ -130,7 +130,7 @@ export default function MyInputGroup() {
     return shopMatch && categoryMatch && statusMatch;
   });
 
-  const products = filteredProducts.map((aProduct) => (
+  let products = filteredProducts.map((aProduct) => (
     <tr key={aProduct.id}>
       <td
         onClick={() => addToBought(aProduct.id)}
@@ -145,6 +145,22 @@ export default function MyInputGroup() {
       </td>
     </tr>
   ));
+
+  //FUZZY SEARCH
+  const searcher = new FuzzySearch(filteredProducts, ["name"], {
+    caseSensitive: false,
+  });
+
+  const handleSearch = (query) => {
+    const result = searcher.search(query);
+    setFuzzySearch(result);
+    filteredProducts = result;
+  };
+
+  console.log(fuzzySearch);
+
+  console.log("THIS IS PRODUCT", product);
+  console.log("Filtered", filteredProducts);
 
   return (
     <>
@@ -227,7 +243,11 @@ export default function MyInputGroup() {
           />
         </Form.Group>
         <InputGroup.Text id="basic-addon1">Product</InputGroup.Text>
-        <Form.Control value={filteredName} onChange={e => setFilteredName(e.target.value)} aria-label="Product" />
+        <Form.Control
+          // value={filteredName}
+          onChange={(e) => handleSearch(e.target.value)}
+          aria-label="Product"
+        />
       </InputGroup>
       <Table striped bordered hover>
         <thead className="text-center">
