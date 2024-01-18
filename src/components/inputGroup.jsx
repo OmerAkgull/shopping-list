@@ -80,7 +80,7 @@ export default function MyInputGroup() {
       (aProduct) => aProduct.isBought === true
     );
     let checkBought = productObj.isBought;
-    if (allProductsBought && checkBought === false) {
+    if (allProductsBought && checkBought === false && filteredProducts > 0) {
       setAlertVisible(true);
     }
   }
