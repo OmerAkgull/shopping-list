@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 import IconButton from "./iconButton";
 import JSConfetti from "js-confetti";
 import FuzzySearch from "fuzzy-search";
+import { DebounceInput } from "react-debounce-input";
 
 const shops = [
   { value: 1, label: "Hepsiburada" },
@@ -47,7 +48,7 @@ export default function MyInputGroup() {
   const [filteredCategoryId, setFilteredCategoryId] = useState("Category");
   const [filteredStatus, setFilteredStatus] = useState("all");
   const [filteredName, setFilteredName] = useState("");
-  const [fuzzySearch, setFuzzySearch] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   const JSConfeti = new JSConfetti();
 
@@ -117,19 +118,6 @@ export default function MyInputGroup() {
     }
   }, [alertVisible]);
 
-  let filteredProducts = product.filter((product) => {
-    const shopMatch =
-      filteredShopId === "Shop" || product.shop.includes(filteredShopId);
-    const categoryMatch =
-      filteredCategoryId === "Category" ||
-      product.category.includes(filteredCategoryId);
-    const statusMatch =
-      filteredStatus === "all" ||
-      (filteredStatus === "bought" && product.isBought) ||
-      (filteredStatus === "notBought" && !product.isBought);
-    return shopMatch && categoryMatch && statusMatch;
-  });
-
   let products = filteredProducts.map((aProduct) => (
     <tr key={aProduct.id}>
       <td
@@ -145,22 +133,33 @@ export default function MyInputGroup() {
       </td>
     </tr>
   ));
+  useEffect(() => {
+    let x = product.filter((product) => {
+      const shopMatch =
+        filteredShopId === "Shop" || product.shop.includes(filteredShopId);
+      const categoryMatch =
+        filteredCategoryId === "Category" ||
+        product.category.includes(filteredCategoryId);
+      const statusMatch =
+        filteredStatus === "all" ||
+        (filteredStatus === "bought" && product.isBought) ||
+        (filteredStatus === "notBought" && !product.isBought);
+      return shopMatch && categoryMatch && statusMatch;
+    });
 
-  //FUZZY SEARCH
-  const searcher = new FuzzySearch(filteredProducts, ["name"], {
-    caseSensitive: false,
-  });
-
-  const handleSearch = (query) => {
-    const result = searcher.search(query);
-    setFuzzySearch(result);
-    filteredProducts = result;
-  };
-
-  console.log(fuzzySearch);
-
-  console.log("THIS IS PRODUCT", product);
-  console.log("Filtered", filteredProducts);
+    //FUZZY SEARCH
+    const searcher = new FuzzySearch(x, ["name"], {
+      caseSensitive: false,
+    });
+    const result = searcher.search(filteredName);
+    setFilteredProducts(result);
+  }, [
+    filteredShopId,
+    filteredCategoryId,
+    product,
+    filteredName,
+    filteredStatus,
+  ]);
 
   return (
     <>
@@ -176,11 +175,11 @@ export default function MyInputGroup() {
           aria-describedby="inputGroup-sizing-default"
         />
         <Form.Select onChange={(e) => setProductShop(e.target.value)}>
-          <option>Shop</option>
+          <option value="">Shop</option>
           {shopOptions}
         </Form.Select>
         <Form.Select onChange={(e) => setProductCategory(e.target.value)}>
-          <option>Category</option>
+          <option value="">Category</option>
           {categoryOptions}
         </Form.Select>
         <Button onClick={addProduct} variant="primary" type="submit">
@@ -242,10 +241,13 @@ export default function MyInputGroup() {
             id="inline"
           />
         </Form.Group>
-        <InputGroup.Text id="basic-addon1">Product</InputGroup.Text>
-        <Form.Control
+        <InputGroup.Text className="rounded py-2" id="basic-addon1">Product</InputGroup.Text>
+        <DebounceInput className="ms-2 py-2 rounded"
+          element="input"
+          minLength={2}
+          debounceTimeout={300}
           // value={filteredName}
-          onChange={(e) => handleSearch(e.target.value)}
+          onChange={(e) => setFilteredName(e.target.value)}
           aria-label="Product"
         />
       </InputGroup>
