@@ -1,5 +1,5 @@
 import { createGlobalStyle } from "styled-components";
-import "../public/background.jpg";
+
 
 export const GlobalStyle = createGlobalStyle`
 *, *::before, *::after {
@@ -9,7 +9,7 @@ export const GlobalStyle = createGlobalStyle`
   margin: 0;
 }
 body {
-  background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("../public/background.jpg");
+  background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/background.jpeg");
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   height: 100vh;
