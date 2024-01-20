@@ -244,7 +244,7 @@ export default function MyInputGroup() {
         <InputGroup.Text className="rounded py-2" id="basic-addon1">Product</InputGroup.Text>
         <DebounceInput className="ms-2 py-2 rounded"
           element="input"
-          minLength={2}
+          minLength={1}
           debounceTimeout={300}
           // value={filteredName}
           onChange={(e) => setFilteredName(e.target.value)}
